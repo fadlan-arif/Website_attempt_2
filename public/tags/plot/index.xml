@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>plot on Arif&#39;s Website</title>
+    <link>/tags/plot/</link>
+    <description>Recent content in plot on Arif&#39;s Website</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 26 Sep 2020 00:00:00 +0000</lastBuildDate><atom:link href="/tags/plot/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Analysis of Recreational Programs in Toronto</title>
+      <link>/2020/09/26/analysis-of-recreational-programs-in-toronto/</link>
+      <pubDate>Sat, 26 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/09/26/analysis-of-recreational-programs-in-toronto/</guid>
+      <description>AbstractRecreational Clubs are apart of everyone’s live, from sports to societies, we love to interact with others to build a network of friends. In this blog we explore data regarding recreational programs tailored for the youth and young adults. We find that there may be a pattern between the languages spoken within these clubs and what type of programs they are. Our findings could have implications about the income or education levels due to their ability to speak more languages.</description>
+    </item>
+    
+  </channel>
+</rss>

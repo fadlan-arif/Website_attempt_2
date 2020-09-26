@@ -1,0 +1,108 @@
+---
+title: "Analysis of Recreational Programs in Toronto"
+author: "Fadlan Arif Fakhrunniam"
+date: 2020-09-26
+bibliography: "references.bib"
+categories: ["R"]
+tags: ["R Markdown", "plot", "regression"]
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE)
+```
+
+
+# Abstract
+Recreational Clubs are apart of everyone's live, from sports to societies, we love to interact with others to build a network of friends. In this blog we explore data regarding recreational programs tailored for the youth and young adults. We find that there may be a pattern between the languages spoken within these clubs and what type of programs they are. Our findings could have implications about the income or education levels due to their ability to speak more languages.
+
+# Introduction
+The data being examined is survey data as it is filled in by different organizations throughout Toronto, each giving open ended answers to many questions. I have decided to examine this, as recreational clubs have always intrigued me. From high school to university, I joined as many clubs as possible; to meet new people and acquire different skills. The data interested me as it allowed me to see patterns of interests within Toronto. More of a certain program could mean different things from type of population to demand. I looked at several parts of this data, trying to narrow down what was usable for comparing and what could lead to a correlation. I first examined the type of activities held in these programs, but since it was an open question, it was very difficult to generalise them into specific categories. 
+
+Within the data, I decided to focus on two columns: LANGUAGES and the LEGAL_STATUS. The LANGUAGES column indicated the languages spoken by the organizers and LEGAL_STATUS stated whether it was a charity or not and by default all of them were already non-profit. Within the LANGUAGES column, the languages were seperated by semi-colons(;) with English always first. After English, was always a combination of different languages. I decided to differentiate this by adding an extra column: WHAT_LANGUAGE. Programs that spoke only English were given the value 'Only English Speaking'. Those with more than English, were assigned: 'English and at Least One More Language'. Afterwards I grouped the data by WHAT_LANGUAGE and counted how many of them were just non-profit and how many of them were non-profit and a registered charity. This gave me the bar charts below. From this data there is a general trend that these recreational programs are more likely to be a registered charity than just a non-profit. There is also proportionately more programs that speak more than one language than those who speak just English. This shows us the level of diversity within Toronto. Although it is an english speaking city, many of its inhabitants come from all over the world.
+
+What does this data mean for the bigger picture? This does show some kind of correlation between how many languages poeple speak and how likely they are to run a charity. From the table we see that those who speak more languages run more  registered charities than those who only speak English. This could mean multiple things. It could mean that the demographic of those who speak more languages are more financially secure and help those in need. It could also indicate higher education levels, as places of higher education know more about the less fortunate and want to help them. As for possible weaknesses, there might be no correlation between these two statistics as it not stated that one causes the other or if they are complimentary information. It is also a very small sample size of 152, so it may not hold generally.
+
+We use @citer, @citestudio, @citetidyverse, @citeblogdown, @citermarkdown, @citeopen, @citedevtools, @citedplyr
+
+# Parsing the data
+
+Below is code used to extract data, annotated with what each block is performing.
+
+```{r download, warning=FALSE, message=FALSE}
+#installing required packages
+#install.packages("devtools")
+#install.packages("tidyverse")
+#install.packages("blogdown")
+library(tidyverse)
+devtools::install_github("sharlagelfand/opendatatoronto")
+library(opendatatoronto)
+library(dplyr)
+
+# get package
+package <- show_package("7ccef51e-5e1c-43ca-8f1a-ff26e4323d43")
+
+# get all resources for this package
+resources <- list_package_resources("7ccef51e-5e1c-43ca-8f1a-ff26e4323d43")
+	
+# identify datastore resources; by default, Toronto Open Data sets datastore resource format to CSV for non-geospatial and GeoJSON for geospatial resources
+datastore_resources <- filter(resources, tolower(format) %in% c('csv', 'geojson'))
+# load the first datastore resource as a sample
+data<- filter(datastore_resources, row_number()==1) %>% get_resource()
+#adding new column to distinguish how many languages a group speaks
+data <- data %>%
+mutate(WHAT_LANGUAGE = if_else(LANGUAGES == "English", "Only English Speaking", "English and at Least One More Language"))
+```
+
+Adding the WHAT_LANGUAGE column helps simplify looking at the data.
+```{r showing_new_column, warning=FALSE, message=FALSE}
+data %>%
+  select(LEGAL_STATUS, WHAT_LANGUAGE) %>%
+  head()
+
+```
+
+# Creating the Chart
+Figure \@ref(fig:bar2) shows the first iteration of the chart.
+
+```{r bar2, fig.cap="Bar chart"}
+data %>%
+  #isolate data for how many languages and legal status
+  group_by(WHAT_LANGUAGE, LEGAL_STATUS) %>%
+  #only take into consideration those who have a legal status
+  filter(!is.na(LEGAL_STATUS)) %>%
+  #create bar chart with wanted specifications
+  ggplot(mapping = aes(x= WHAT_LANGUAGE, fill = LEGAL_STATUS)) +
+  geom_bar(color = "grey40") +
+  labs(title = "Recreational Groups and How Many Languages They Speak", 
+     x = "How Many Languages", 
+     y = "Number")+
+  theme_light() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5)) +
+  scale_fill_brewer(palette = "Set2")
+
+```
+
+
+
+Figure \@ref(fig:bar) shows the same data but seperated by legal status to more easily examine the information.
+```{r bar, fig.cap="Bar chart", echo=FALSE}
+data %>%
+  #isolate data for how many languages and legal status
+  group_by(WHAT_LANGUAGE, LEGAL_STATUS) %>%
+  #only take into consideration those who have a legal status
+  filter(!is.na(LEGAL_STATUS)) %>%
+  #create bar chart with wanted specifications
+  ggplot(mapping = aes(x= WHAT_LANGUAGE, fill = LEGAL_STATUS)) +
+  geom_bar(color = "grey40") +
+  labs(title = "Recreational Groups and How Many Languages They Speak", 
+     x = "How Many Languages", 
+     y = "Number")+
+  theme_light() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5)) +
+  scale_fill_brewer(palette = "Set2")+
+  #Sepearate by legal status
+  facet_wrap(~LEGAL_STATUS)
+
+```
+
+# References
