@@ -104,11 +104,11 @@ data %>%
   facet_wrap(~LEGAL_STATUS)
 
 ```
-#Possible Weaknesses
+# Possible Weaknesses
 
 As for possible weaknesses, there might be no correlation between these two statistics as it not stated that one causes the other or if they are complimentary information. It is also a very small sample size of 152, so it may not hold generally.
 
-#Link to repository
+# Link to repository
 https://github.com/fadlan-arif/Website_attempt_2
 
 # References
